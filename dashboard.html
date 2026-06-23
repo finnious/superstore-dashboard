@@ -290,26 +290,6 @@
     padding: 16px;
     grid-column: 1 / -1;
   }
-  .sim-bar-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.78rem;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .sim-bar-track {
-    height: 12px;
-    background: var(--border);
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-    margin-bottom: 12px;
-  }
-  .sim-bar-fill {
-    height: 100%;
-    border-radius: 6px;
-    transition: width 0.4s;
-  }
 
   @media (max-width: 900px) {
     .chart-grid { grid-template-columns: 1fr; }
@@ -453,11 +433,9 @@
           <div class="value" id="sim-forecast" style="color:var(--accent2);">—</div>
           <div class="note">Revenue at growth rate</div>
         </div>
-        <div class="sim-comparison">
-          <div class="sim-bar-label"><span>Current Margin</span><span id="sim-bar-current-label">—</span></div>
-          <div class="sim-bar-track"><div class="sim-bar-fill" id="sim-bar-current" style="background:var(--muted); width:0%"></div></div>
-          <div class="sim-bar-label"><span>Projected Margin (with cap)</span><span id="sim-bar-proj-label">—</span></div>
-          <div class="sim-bar-track"><div class="sim-bar-fill" id="sim-bar-proj" style="background:var(--accent3); width:0%"></div></div>
+        <div class="sim-comparison" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div><canvas id="sim-chart-margin" height="100"></canvas></div>
+          <div><canvas id="sim-chart-profit" height="100"></canvas></div>
         </div>
       </div>
     </div>
@@ -1119,16 +1097,60 @@ function updateSimulator() {
   document.getElementById('sim-recovered').style.color = recovered >= 0 ? 'var(--accent3)' : 'var(--danger)';
   document.getElementById('sim-forecast').textContent = fmtMoney(forecast);
 
-  const currentBarW = Math.max(2, Math.min(100, (currentMargin / 40) * 100));
-  const projBarW = Math.max(2, Math.min(100, (projectedMargin / 40) * 100));
+  destroyChart('simMargin');
+  destroyChart('simProfit');
 
-  document.getElementById('sim-bar-current-label').textContent = fmtPct(currentMargin);
-  document.getElementById('sim-bar-proj-label').textContent = fmtPct(projectedMargin);
+  charts['simMargin'] = new Chart(document.getElementById('sim-chart-margin'), {
+    type: 'bar',
+    data: {
+      labels: ['Current', 'With Cap'],
+      datasets: [{
+        data: [parseFloat(currentMargin.toFixed(1)), parseFloat(projectedMargin.toFixed(1))],
+        backgroundColor: ['#94a3b8', '#34d399'],
+        borderRadius: 6,
+        barPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Profit Margin %', color: '#94a3b8', font: { size: 11 } },
+        tooltip: { callbacks: { label: ctx => ctx.parsed.y.toFixed(1) + '%' } }
+      },
+      scales: {
+        y: { min: 0, max: 40, ticks: { callback: v => v + '%', font: { size: 10 } }, grid: { color: 'rgba(51,65,85,0.5)' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
 
-  const bc = document.getElementById('sim-bar-current');
-  const bp = document.getElementById('sim-bar-proj');
-  bc.style.cssText = 'height:100%;border-radius:6px;transition:width 0.4s;background:#94a3b8;width:' + currentBarW + '%';
-  bp.style.cssText = 'height:100%;border-radius:6px;transition:width 0.4s;background:#34d399;width:' + projBarW + '%';
+  charts['simProfit'] = new Chart(document.getElementById('sim-chart-profit'), {
+    type: 'bar',
+    data: {
+      labels: ['Current', 'With Cap'],
+      datasets: [{
+        data: [Math.round(currentProfit / 1000), Math.round(projectedProfit / 1000)],
+        backgroundColor: ['#94a3b8', '#34d399'],
+        borderRadius: 6,
+        barPercentage: 0.6
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 300 },
+      plugins: {
+        legend: { display: false },
+        title: { display: true, text: 'Total Profit ($K)', color: '#94a3b8', font: { size: 11 } },
+        tooltip: { callbacks: { label: ctx => '$' + ctx.parsed.y + 'K' } }
+      },
+      scales: {
+        y: { min: 0, max: Math.max(Math.round(projectedProfit / 1000) + 50, Math.round(currentProfit / 1000) + 100), ticks: { callback: v => '$' + v + 'K', font: { size: 10 } }, grid: { color: 'rgba(51,65,85,0.5)' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
 }
 
 // ── FILTER CLICK HANDLERS ──
