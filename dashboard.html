@@ -390,90 +390,96 @@
     </div>
   </div>
 
-  <div class="simulator" id="simulator-section">
-    <h2>&#129302; What-If Discount Simulator <span style="font-size:0.7rem; background:rgba(56,189,248,0.15); color:var(--accent); padding:3px 10px; border-radius:4px; font-weight:500;">AI Scenario Tool</span></h2>
-    <div class="simulator-body">
-      <div class="sim-controls">
-        <div class="sim-slider-group">
-          <label>Maximum Discount Cap — orders above this threshold are recalculated at the cap rate</label>
-          <div class="sim-slider-row">
-            <span style="font-size:0.75rem; color:var(--muted);">0%</span>
-            <input type="range" id="sim-discount-cap" min="0" max="50" value="20" step="5" oninput="updateSimulator()">
-            <span style="font-size:0.75rem; color:var(--muted);">50%</span>
-            <div class="sim-value" id="sim-cap-display">20%</div>
-          </div>
-        </div>
-        <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px;">
-          <label style="font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 12px; font-weight: 600;">
-            &#128300; Order Profitability Predictor — will this order make or lose money?
-          </label>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div>
-              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Category</label>
-              <select id="pred-category" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
-                <option value="Technology">Technology</option>
-                <option value="Office Supplies">Office Supplies</option>
-                <option value="Furniture" selected>Furniture</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Sub-Category</label>
-              <select id="pred-subcat" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
-              </select>
-            </div>
-            <div>
-              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Region</label>
-              <select id="pred-region" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
-                <option value="West">West</option>
-                <option value="East">East</option>
-                <option value="Central">Central</option>
-                <option value="South">South</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Discount %</label>
-              <div class="sim-slider-row" style="margin-top: 4px;">
-                <input type="range" id="pred-discount" min="0" max="50" value="15" step="5" oninput="updatePredictor()">
-                <div class="sim-value" id="pred-discount-display" style="font-size: 1rem; min-width: 36px;">15%</div>
-              </div>
-            </div>
-          </div>
-          <div id="pred-result" style="margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 16px;">
-            <div id="pred-risk-badge" style="width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 1.1rem;"></div>
-            <div style="flex: 1;">
-              <div id="pred-verdict" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 4px;"></div>
-              <div id="pred-details" style="font-size: 0.78rem; color: var(--muted); line-height: 1.5;"></div>
-            </div>
-          </div>
+  <div class="chart-grid" id="simulator-section">
+
+    <!-- LEFT: Discount Cap Simulator -->
+    <div class="simulator" style="margin-bottom: 0;">
+      <h2 style="font-size: 1rem;">&#129302; Discount Cap Simulator <span style="font-size:0.65rem; background:rgba(56,189,248,0.15); color:var(--accent); padding:2px 8px; border-radius:4px; font-weight:500;">AI Tool 1</span></h2>
+      <div class="sim-slider-group" style="margin-bottom: 16px;">
+        <label>Set a maximum discount cap — see the profit impact instantly</label>
+        <div class="sim-slider-row" style="margin-top: 8px;">
+          <span style="font-size:0.75rem; color:var(--muted);">0%</span>
+          <input type="range" id="sim-discount-cap" min="0" max="50" value="20" step="5" oninput="updateSimulator()">
+          <span style="font-size:0.75rem; color:var(--muted);">50%</span>
+          <div class="sim-value" id="sim-cap-display">20%</div>
         </div>
       </div>
-      <div class="sim-results" id="sim-results">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
         <div class="sim-result-card">
           <div class="label">Current Profit</div>
           <div class="value" id="sim-current-profit" style="color:var(--muted);">—</div>
-          <div class="note">With existing discounts</div>
+          <div class="note">Baseline</div>
         </div>
         <div class="sim-result-card">
-          <div class="label">Projected Profit</div>
+          <div class="label">With Cap</div>
           <div class="value" id="sim-projected-profit" style="color:var(--accent3);">—</div>
-          <div class="note">With discount cap applied</div>
+          <div class="note">Projected</div>
         </div>
         <div class="sim-result-card">
-          <div class="label">Profit Recovered</div>
+          <div class="label">Recovered</div>
           <div class="value" id="sim-recovered" style="color:var(--accent);">—</div>
-          <div class="note">Additional profit from cap</div>
+          <div class="note">Additional profit</div>
         </div>
         <div class="sim-result-card">
           <div class="label">Orders at Risk</div>
           <div class="value" id="sim-at-risk" style="color:var(--accent4);">—</div>
           <div class="note" id="sim-at-risk-note">Would lose money</div>
         </div>
-        <div class="sim-comparison" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-          <div><canvas id="sim-chart-margin" height="100"></canvas></div>
-          <div><canvas id="sim-chart-profit" height="100"></canvas></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <div style="background: rgba(30,41,59,0.7); border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <canvas id="sim-chart-margin" height="120"></canvas>
+        </div>
+        <div style="background: rgba(30,41,59,0.7); border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <canvas id="sim-chart-profit" height="120"></canvas>
         </div>
       </div>
     </div>
+
+    <!-- RIGHT: Profitability Predictor -->
+    <div class="simulator" style="margin-bottom: 0; background: linear-gradient(135deg, rgba(129,140,248,0.08), rgba(52,211,153,0.05)); border-color: rgba(129,140,248,0.3);">
+      <h2 style="font-size: 1rem;">&#128300; Order Profitability Predictor <span style="font-size:0.65rem; background:rgba(129,140,248,0.15); color:var(--accent2); padding:2px 8px; border-radius:4px; font-weight:500;">AI Tool 2</span></h2>
+      <p style="font-size: 0.78rem; color: var(--muted); margin-bottom: 14px;">Will this order make or lose money? Select parameters to predict.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+        <div>
+          <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Category</label>
+          <select id="pred-category" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+            <option value="Technology">Technology</option>
+            <option value="Office Supplies">Office Supplies</option>
+            <option value="Furniture" selected>Furniture</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Sub-Category</label>
+          <select id="pred-subcat" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Region</label>
+          <select id="pred-region" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+            <option value="West">West</option>
+            <option value="East">East</option>
+            <option value="Central">Central</option>
+            <option value="South">South</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Discount %</label>
+          <div class="sim-slider-row" style="margin-top: 4px;">
+            <input type="range" id="pred-discount" min="0" max="50" value="15" step="5" oninput="updatePredictor()">
+            <div class="sim-value" id="pred-discount-display" style="font-size: 1rem; min-width: 36px;">15%</div>
+          </div>
+        </div>
+      </div>
+      <div id="pred-result" style="background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; align-items: center; gap: 16px;">
+        <div id="pred-risk-badge" style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 1.2rem;"></div>
+        <div style="flex: 1;">
+          <div id="pred-verdict" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 4px;"></div>
+          <div id="pred-details" style="font-size: 0.78rem; color: var(--muted); line-height: 1.5;"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <div class="chart-grid">
