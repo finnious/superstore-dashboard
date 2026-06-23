@@ -496,13 +496,18 @@
           </div>
         </div>
         <div style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 4px; padding: 6px 8px;">
-          <div style="color: var(--accent); font-weight: 600; font-size: 0.6rem;">&#129302; What-If Simulator</div>
+          <div style="color: var(--accent); font-weight: 600; font-size: 0.6rem;">&#129302; AI Scenario Tools</div>
           <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
-            <span style="color: var(--muted); font-size: 0.55rem;">Discount Cap:</span>
-            <div style="flex: 1; height: 3px; background: var(--border); border-radius: 2px; position: relative;">
+            <span style="color: var(--muted); font-size: 0.55rem;">Cap:</span>
+            <div style="flex: 1; height: 3px; background: var(--border); border-radius: 2px;">
               <div style="width: 40%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
             </div>
-            <span style="color: var(--accent); font-weight: 700; font-size: 0.65rem;">20%</span>
+            <span style="color: var(--accent); font-weight: 700; font-size: 0.6rem;">20%</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px;">
+            <span style="color: var(--muted); font-size: 0.55rem;">Predictor:</span>
+            <span style="background: rgba(248,113,113,0.15); color: #f87171; padding: 1px 6px; border-radius: 3px; font-size: 0.5rem; font-weight: 700;">72 HIGH RISK</span>
+            <span style="color: var(--muted); font-size: 0.48rem;">Tables + 30% disc.</span>
           </div>
         </div>
       </div>
@@ -530,20 +535,25 @@
     <div>
       <span class="tag tag-green">AI-POWERED FEATURES</span>
       <div class="card" style="margin-bottom: 12px; border-color: rgba(56,189,248,0.4);">
-        <h3 style="color: var(--accent);">&#129302; What-If Discount Simulator</h3>
-        <p>The dashboard's flagship AI feature. Users adjust a discount cap slider and growth rate, and see <strong>in real-time</strong>:</p>
+        <h3 style="color: var(--accent);">&#129302; Two AI Scenario Tools</h3>
+        <p><strong>1. Discount Cap Simulator</strong> — Adjust a slider to set a maximum discount and instantly see:</p>
         <ul>
-          <li>Current vs. projected profit comparison</li>
+          <li>Current vs. projected profit comparison charts</li>
           <li>Exact dollar amount of profit recovered</li>
-          <li>Next-year revenue forecast at chosen growth rate</li>
-          <li>Margin comparison bar chart (before vs. after)</li>
+          <li>Total orders at risk of losing money</li>
         </ul>
-        <p style="margin-top: 8px;">All calculations run against the <strong>currently filtered data</strong> — combine with Year/Region/Category filters for targeted scenario planning.</p>
+        <p style="margin-top: 8px;"><strong>2. Order Profitability Predictor</strong> — Select a category, sub-category, region, and discount to get:</p>
+        <ul>
+          <li>Risk score (0-100) based on historical order outcomes</li>
+          <li>Average profit/loss for similar orders</li>
+          <li>Actionable recommendation (safe, reduce discount, renegotiate)</li>
+        </ul>
+        <p style="margin-top: 8px;">Both tools run against the <strong>currently filtered data</strong> and update in real-time.</p>
       </div>
       <div class="card" style="margin-bottom: 12px;">
         <h3>Dynamic Predictive Insights</h3>
         <ul>
-          <li><strong>Revenue Forecasting</strong> — projects next-year revenue from calculated growth rates</li>
+          <li><strong>Profitability Scoring</strong> — predicts order-level risk from category, region, and discount</li>
           <li><strong>Risk Detection</strong> — auto-surfaces worst sub-category and weakest region</li>
           <li><strong>Anomaly Alerts</strong> — insight bar highlights profit-eroding patterns dynamically</li>
         </ul>

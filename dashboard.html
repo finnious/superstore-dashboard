@@ -403,13 +403,47 @@
             <div class="sim-value" id="sim-cap-display">20%</div>
           </div>
         </div>
-        <div class="sim-slider-group">
-          <label>Projected Annual Growth Rate — applied to the most recent year's revenue</label>
-          <div class="sim-slider-row">
-            <span style="font-size:0.75rem; color:var(--muted);">0%</span>
-            <input type="range" id="sim-growth-rate" min="0" max="40" value="20" step="5" oninput="updateSimulator()">
-            <span style="font-size:0.75rem; color:var(--muted);">40%</span>
-            <div class="sim-value" id="sim-growth-display" style="color:var(--accent3);">20%</div>
+        <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 8px;">
+          <label style="font-size: 0.82rem; color: var(--muted); display: block; margin-bottom: 12px; font-weight: 600;">
+            &#128300; Order Profitability Predictor — will this order make or lose money?
+          </label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Category</label>
+              <select id="pred-category" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+                <option value="Technology">Technology</option>
+                <option value="Office Supplies">Office Supplies</option>
+                <option value="Furniture" selected>Furniture</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Sub-Category</label>
+              <select id="pred-subcat" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Region</label>
+              <select id="pred-region" onchange="updatePredictor()" style="width:100%; padding: 8px; background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 6px; font-size: 0.82rem; margin-top: 4px; cursor: pointer;">
+                <option value="West">West</option>
+                <option value="East">East</option>
+                <option value="Central">Central</option>
+                <option value="South">South</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px;">Discount %</label>
+              <div class="sim-slider-row" style="margin-top: 4px;">
+                <input type="range" id="pred-discount" min="0" max="50" value="15" step="5" oninput="updatePredictor()">
+                <div class="sim-value" id="pred-discount-display" style="font-size: 1rem; min-width: 36px;">15%</div>
+              </div>
+            </div>
+          </div>
+          <div id="pred-result" style="margin-top: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; display: flex; align-items: center; gap: 16px;">
+            <div id="pred-risk-badge" style="width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800; font-size: 1.1rem;"></div>
+            <div style="flex: 1;">
+              <div id="pred-verdict" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 4px;"></div>
+              <div id="pred-details" style="font-size: 0.78rem; color: var(--muted); line-height: 1.5;"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -430,9 +464,9 @@
           <div class="note">Additional profit from cap</div>
         </div>
         <div class="sim-result-card">
-          <div class="label">Next-Year Forecast</div>
-          <div class="value" id="sim-forecast" style="color:var(--accent2);">—</div>
-          <div class="note">Revenue at growth rate</div>
+          <div class="label">Orders at Risk</div>
+          <div class="value" id="sim-at-risk" style="color:var(--accent4);">—</div>
+          <div class="note" id="sim-at-risk-note">Would lose money</div>
         </div>
         <div class="sim-comparison" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div><canvas id="sim-chart-margin" height="100"></canvas></div>
@@ -1059,10 +1093,8 @@ function updateSimulator() {
   if (data.length === 0) return;
 
   const capPct = parseInt(document.getElementById('sim-discount-cap').value) / 100;
-  const growthPct = parseInt(document.getElementById('sim-growth-rate').value) / 100;
 
   document.getElementById('sim-cap-display').textContent = Math.round(capPct * 100) + '%';
-  document.getElementById('sim-growth-display').textContent = Math.round(growthPct * 100) + '%';
 
   const totalSales = data.reduce((s, r) => s + r.sales, 0);
   const currentProfit = data.reduce((s, r) => s + r.profit, 0);
@@ -1086,19 +1118,17 @@ function updateSimulator() {
   const recovered = projectedProfit - currentProfit;
   const projectedMargin = projectedSales > 0 ? (projectedProfit / projectedSales) * 100 : 0;
 
-  const years = [...new Set(data.map(r => r.year))].sort();
-  let forecast = 0;
-  if (years.length > 0) {
-    const lastYear = years[years.length - 1];
-    const lastSales = data.filter(r => r.year === lastYear).reduce((s, r) => s + r.sales, 0);
-    forecast = lastSales * (1 + growthPct);
-  }
+  const atRiskOrders = data.filter(r => r.profit < 0).length;
+  const atRiskPct = data.length > 0 ? ((atRiskOrders / data.length) * 100).toFixed(0) : 0;
 
   document.getElementById('sim-current-profit').textContent = fmtMoney(currentProfit);
   document.getElementById('sim-projected-profit').textContent = fmtMoney(projectedProfit);
   document.getElementById('sim-recovered').textContent = (recovered >= 0 ? '+' : '') + fmtMoney(recovered);
   document.getElementById('sim-recovered').style.color = recovered >= 0 ? 'var(--accent3)' : 'var(--danger)';
-  document.getElementById('sim-forecast').textContent = fmtMoney(forecast);
+  document.getElementById('sim-at-risk').textContent = fmtNum(atRiskOrders);
+  document.getElementById('sim-at-risk-note').textContent = `${atRiskPct}% of filtered orders`;
+
+  updatePredictor();
 
   destroyChart('simMargin');
   destroyChart('simProfit');
@@ -1156,6 +1186,95 @@ function updateSimulator() {
       }
     }
   });
+}
+
+// ── PROFITABILITY PREDICTOR ──
+function populateSubcats() {
+  const cat = document.getElementById('pred-category').value;
+  const subcatMap = {
+    'Technology': ['Phones', 'Accessories', 'Copiers', 'Machines'],
+    'Furniture': ['Chairs', 'Tables', 'Bookcases', 'Furnishings'],
+    'Office Supplies': ['Binders', 'Storage', 'Appliances', 'Paper', 'Art', 'Envelopes', 'Labels', 'Supplies', 'Fasteners']
+  };
+  const sel = document.getElementById('pred-subcat');
+  sel.innerHTML = (subcatMap[cat] || []).map(s => '<option value="' + s + '">' + s + '</option>').join('');
+}
+
+function updatePredictor() {
+  populateSubcats();
+  if (RAW_DATA.length === 0) return;
+
+  const cat = document.getElementById('pred-category').value;
+  const subcat = document.getElementById('pred-subcat').value;
+  const region = document.getElementById('pred-region').value;
+  const discount = parseInt(document.getElementById('pred-discount').value) / 100;
+
+  document.getElementById('pred-discount-display').textContent = Math.round(discount * 100) + '%';
+
+  const matching = RAW_DATA.filter(r =>
+    r.category === cat && r.subCategory === subcat && r.region === region
+  );
+
+  const discountBand = RAW_DATA.filter(r => {
+    const dBand = Math.round(r.discount * 20) / 20;
+    const targetBand = Math.round(discount * 20) / 20;
+    return r.category === cat && r.subCategory === subcat && Math.abs(dBand - targetBand) <= 0.05;
+  });
+
+  const pool = discountBand.length >= 5 ? discountBand : matching;
+
+  const badge = document.getElementById('pred-risk-badge');
+  const verdict = document.getElementById('pred-verdict');
+  const details = document.getElementById('pred-details');
+
+  if (pool.length < 3) {
+    badge.style.background = '#334155';
+    badge.style.color = '#94a3b8';
+    badge.textContent = '?';
+    verdict.style.color = '#94a3b8';
+    verdict.textContent = 'Insufficient Data';
+    details.textContent = `Only ${pool.length} similar orders found. Need at least 3 for a prediction.`;
+    return;
+  }
+
+  const avgSales = pool.reduce((s, r) => s + r.sales, 0) / pool.length;
+  const avgProfit = pool.reduce((s, r) => s + r.profit, 0) / pool.length;
+  const avgMargin = avgSales > 0 ? (avgProfit / avgSales) * 100 : 0;
+  const lossRate = pool.filter(r => r.profit < 0).length / pool.length;
+  const riskScore = Math.round(lossRate * 100);
+
+  let riskLevel, riskColor, riskBg;
+  if (riskScore <= 20) {
+    riskLevel = 'LOW RISK';
+    riskColor = '#34d399';
+    riskBg = 'rgba(52,211,153,0.15)';
+  } else if (riskScore <= 50) {
+    riskLevel = 'MEDIUM';
+    riskColor = '#fb923c';
+    riskBg = 'rgba(251,146,60,0.15)';
+  } else {
+    riskLevel = 'HIGH RISK';
+    riskColor = '#f87171';
+    riskBg = 'rgba(248,113,113,0.15)';
+  }
+
+  badge.style.background = riskBg;
+  badge.style.color = riskColor;
+  badge.style.border = '2px solid ' + riskColor;
+  badge.textContent = riskScore;
+
+  verdict.style.color = riskColor;
+  verdict.textContent = riskLevel + ': ' + (avgProfit >= 0 ? 'Likely Profitable' : 'Likely to Lose Money');
+
+  const profitWord = avgProfit >= 0 ? 'profit' : 'loss';
+  details.innerHTML =
+    `Based on <strong>${pool.length}</strong> similar orders: ` +
+    `avg ${profitWord} of <strong>${fmtMoney(Math.abs(avgProfit))}</strong> per order, ` +
+    `<strong>${fmtPct(Math.abs(avgMargin))}</strong> margin. ` +
+    `<strong>${riskScore}%</strong> of similar orders lost money. ` +
+    (discount > 0.2 ? '<br><span style="color:#f87171;">Recommendation: Reduce discount below 20% to improve profitability.</span>' :
+     avgProfit >= 0 ? '<br><span style="color:#34d399;">This order profile is within safe parameters.</span>' :
+     '<br><span style="color:#fb923c;">Consider renegotiating supplier cost or adjusting pricing for this sub-category.</span>');
 }
 
 // ── FILTER CLICK HANDLERS ──
