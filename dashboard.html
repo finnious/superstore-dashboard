@@ -1119,13 +1119,16 @@ function updateSimulator() {
   document.getElementById('sim-recovered').style.color = recovered >= 0 ? 'var(--accent3)' : 'var(--danger)';
   document.getElementById('sim-forecast').textContent = fmtMoney(forecast);
 
-  const maxMargin = Math.max(currentMargin, projectedMargin, 1);
-  const scale = 80 / maxMargin;
+  const currentBarW = Math.max(2, Math.min(100, (currentMargin / 40) * 100));
+  const projBarW = Math.max(2, Math.min(100, (projectedMargin / 40) * 100));
 
-  document.getElementById('sim-bar-current').style.width = Math.max(0, currentMargin * scale) + '%';
   document.getElementById('sim-bar-current-label').textContent = fmtPct(currentMargin);
-  document.getElementById('sim-bar-proj').style.width = Math.max(0, projectedMargin * scale) + '%';
   document.getElementById('sim-bar-proj-label').textContent = fmtPct(projectedMargin);
+
+  const bc = document.getElementById('sim-bar-current');
+  const bp = document.getElementById('sim-bar-proj');
+  bc.style.cssText = 'height:100%;border-radius:6px;transition:width 0.4s;background:#94a3b8;width:' + currentBarW + '%';
+  bp.style.cssText = 'height:100%;border-radius:6px;transition:width 0.4s;background:#34d399;width:' + projBarW + '%';
 }
 
 // ── FILTER CLICK HANDLERS ──
