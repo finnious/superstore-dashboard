@@ -1088,18 +1088,22 @@ function updateSimulator() {
   const currentMargin = totalSales > 0 ? (currentProfit / totalSales) * 100 : 0;
 
   let projectedProfit = 0;
+  let projectedSales = 0;
   data.forEach(r => {
     if (r.discount > capPct) {
-      const revenueAtCap = r.sales * (1 - capPct) / (1 - r.discount || 1);
+      const denominator = (1 - r.discount) || 0.01;
+      const revenueAtCap = r.sales * (1 - capPct) / denominator;
       const costEstimate = r.sales - r.profit;
       projectedProfit += revenueAtCap - costEstimate;
+      projectedSales += revenueAtCap;
     } else {
       projectedProfit += r.profit;
+      projectedSales += r.sales;
     }
   });
 
   const recovered = projectedProfit - currentProfit;
-  const projectedMargin = totalSales > 0 ? (projectedProfit / totalSales) * 100 : 0;
+  const projectedMargin = projectedSales > 0 ? (projectedProfit / projectedSales) * 100 : 0;
 
   const years = [...new Set(data.map(r => r.year))].sort();
   let forecast = 0;
