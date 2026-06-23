@@ -408,15 +408,31 @@
         <canvas id="pres-region" height="160"></canvas>
       </div>
       <div class="card">
-        <h3 style="font-size: 0.85rem;">Architecture: Data Pipeline</h3>
-        <div class="arch-flow">
-          <div class="arch-box"><h4>CSV Source</h4><p>Raw transactional data</p></div>
+        <h3 style="font-size: 0.85rem;">Strategic Decision Points Across the Data Pipeline</h3>
+        <div class="arch-flow" style="flex-wrap: wrap; gap: 4px;">
+          <div class="arch-box" style="flex: 1 1 120px; min-width: 120px;">
+            <h4>Collect</h4>
+            <p style="font-size: 0.68rem;">9,994 transactions<br>21 fields per order</p>
+            <p style="font-size: 0.62rem; color: var(--accent3); margin-top: 4px;">KPI: Data completeness</p>
+          </div>
           <div class="arch-arrow">&#9654;</div>
-          <div class="arch-box"><h4>PapaParse</h4><p>Client-side parsing</p></div>
+          <div class="arch-box" style="flex: 1 1 120px; min-width: 120px;">
+            <h4>Clean & Parse</h4>
+            <p style="font-size: 0.68rem;">Type validation<br>Date normalization</p>
+            <p style="font-size: 0.62rem; color: var(--accent3); margin-top: 4px;">KPI: Parse success rate</p>
+          </div>
           <div class="arch-arrow">&#9654;</div>
-          <div class="arch-box"><h4>JS Engine</h4><p>Filter & aggregate</p></div>
+          <div class="arch-box" style="flex: 1 1 120px; min-width: 120px;">
+            <h4>Analyze</h4>
+            <p style="font-size: 0.68rem;">Filter, aggregate<br>Anomaly detection</p>
+            <p style="font-size: 0.62rem; color: var(--accent4); margin-top: 4px;">Decision: Cap discounts?</p>
+          </div>
           <div class="arch-arrow">&#9654;</div>
-          <div class="arch-box"><h4>Chart.js</h4><p>Interactive visuals</p></div>
+          <div class="arch-box" style="flex: 1 1 120px; min-width: 120px;">
+            <h4>Act</h4>
+            <p style="font-size: 0.68rem;">Policy changes<br>Regional interventions</p>
+            <p style="font-size: 0.62rem; color: var(--danger); margin-top: 4px;">Decision: Exit Tables?</p>
+          </div>
         </div>
       </div>
     </div>
@@ -430,50 +446,115 @@
   <h2>Dashboard UI/UX & AI Feature Strategy</h2>
   <div class="two-col">
     <div>
-      <span class="tag tag-blue">UI/UX DESIGN PRINCIPLES</span>
-      <div class="feature-grid">
-        <div class="feature">
-          <div class="icon">&#9881;&#65039;</div>
-          <h4>Multi-Dimensional Filtering</h4>
-          <p>Year, Region, and Category filters that instantly recalculate every KPI, chart, and table from raw CSV data.</p>
+      <span class="tag tag-blue">DASHBOARD PREVIEW</span>
+      <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 0.65rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: var(--card); border-radius: 6px; margin-bottom: 8px;">
+          <span style="font-weight: 700; color: var(--accent); font-size: 0.7rem;">Superstore BI Dashboard</span>
+          <span style="color: var(--muted); font-size: 0.6rem;">Export PDF</span>
         </div>
-        <div class="feature">
-          <div class="icon">&#128202;</div>
-          <h4>KPI-First Layout</h4>
-          <p>Four headline metrics at top — revenue, profit, margin, risk — giving executives a 3-second health check.</p>
+        <div style="display: flex; gap: 4px; margin-bottom: 8px; flex-wrap: wrap;">
+          <span style="background: var(--accent); color: var(--bg); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem; font-weight: 600;">All Years</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">2014</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">2015</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">2016</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">2017</span>
+          <span style="width: 1px; background: var(--border); margin: 0 2px;"></span>
+          <span style="background: var(--accent); color: var(--bg); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem; font-weight: 600;">All Regions</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">West</span>
+          <span style="background: var(--card); color: var(--muted); padding: 2px 8px; border-radius: 4px; font-size: 0.58rem;">East</span>
         </div>
-        <div class="feature">
-          <div class="icon">&#128203;</div>
-          <h4>Sortable Data Table</h4>
-          <p>17 sub-categories with click-to-sort columns. Visual bar chart in the last column for instant comparison.</p>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px;">
+          <div style="background: var(--card); border-radius: 4px; padding: 6px; text-align: center;">
+            <div style="color: var(--muted); font-size: 0.5rem; text-transform: uppercase;">Revenue</div>
+            <div style="color: var(--accent); font-weight: 700; font-size: 0.85rem;">$2.30M</div>
+          </div>
+          <div style="background: var(--card); border-radius: 4px; padding: 6px; text-align: center;">
+            <div style="color: var(--muted); font-size: 0.5rem; text-transform: uppercase;">Profit</div>
+            <div style="color: var(--accent3); font-weight: 700; font-size: 0.85rem;">$286K</div>
+          </div>
+          <div style="background: var(--card); border-radius: 4px; padding: 6px; text-align: center;">
+            <div style="color: var(--muted); font-size: 0.5rem; text-transform: uppercase;">Margin</div>
+            <div style="color: var(--accent2); font-weight: 700; font-size: 0.85rem;">12.5%</div>
+          </div>
+          <div style="background: var(--card); border-radius: 4px; padding: 6px; text-align: center;">
+            <div style="color: var(--muted); font-size: 0.5rem; text-transform: uppercase;">At Risk</div>
+            <div style="color: var(--danger); font-weight: 700; font-size: 0.85rem;">$135K</div>
+          </div>
         </div>
-        <div class="feature">
-          <div class="icon">&#128196;</div>
-          <h4>PDF Export</h4>
-          <p>One-click export captures the current filtered view with all charts, preserving the exact analysis state.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-bottom: 8px;">
+          <div style="background: var(--card); border-radius: 4px; padding: 8px; height: 60px; display: flex; align-items: flex-end; gap: 3px; padding-bottom: 6px;">
+            <div style="flex:1; background: rgba(56,189,248,0.4); height: 30%; border-radius: 2px;"></div>
+            <div style="flex:1; background: rgba(56,189,248,0.5); height: 45%; border-radius: 2px;"></div>
+            <div style="flex:1; background: rgba(56,189,248,0.6); height: 55%; border-radius: 2px;"></div>
+            <div style="flex:1; background: rgba(56,189,248,0.8); height: 80%; border-radius: 2px;"></div>
+            <div style="flex:1; background: var(--accent); height: 100%; border-radius: 2px;"></div>
+          </div>
+          <div style="background: var(--card); border-radius: 4px; padding: 8px; height: 60px; display: flex; align-items: flex-end; gap: 6px; padding-bottom: 6px;">
+            <div style="flex:1; background: var(--accent); height: 90%; border-radius: 2px;"></div>
+            <div style="flex:1; background: var(--accent4); height: 75%; border-radius: 2px;"></div>
+            <div style="flex:1; background: var(--accent2); height: 70%; border-radius: 2px;"></div>
+          </div>
+        </div>
+        <div style="background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 4px; padding: 6px 8px;">
+          <div style="color: var(--accent); font-weight: 600; font-size: 0.6rem;">&#129302; What-If Simulator</div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+            <span style="color: var(--muted); font-size: 0.55rem;">Discount Cap:</span>
+            <div style="flex: 1; height: 3px; background: var(--border); border-radius: 2px; position: relative;">
+              <div style="width: 40%; height: 100%; background: var(--accent); border-radius: 2px;"></div>
+            </div>
+            <span style="color: var(--accent); font-weight: 700; font-size: 0.65rem;">20%</span>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 12px;">
+        <div class="feature-grid" style="grid-template-columns: 1fr 1fr; gap: 8px;">
+          <div class="feature" style="padding: 12px;">
+            <h4 style="font-size: 0.8rem;">&#9881;&#65039; 3 Filter Dimensions</h4>
+            <p style="font-size: 0.72rem;">Year, Region, Category — all charts recalculate instantly</p>
+          </div>
+          <div class="feature" style="padding: 12px;">
+            <h4 style="font-size: 0.8rem;">&#128202; 6 Chart Types</h4>
+            <p style="font-size: 0.72rem;">Line, bar, doughnut, combo — matched to data type</p>
+          </div>
+          <div class="feature" style="padding: 12px;">
+            <h4 style="font-size: 0.8rem;">&#128203; Sortable Table</h4>
+            <p style="font-size: 0.72rem;">17 sub-categories, click any column to sort</p>
+          </div>
+          <div class="feature" style="padding: 12px;">
+            <h4 style="font-size: 0.8rem;">&#128196; PDF Export</h4>
+            <p style="font-size: 0.72rem;">One-click, preserves current filter state</p>
+          </div>
         </div>
       </div>
     </div>
     <div>
       <span class="tag tag-green">AI-POWERED FEATURES</span>
-      <div class="card" style="margin-bottom: 16px;">
-        <h3>Dynamic Predictive Insights</h3>
-        <p>The dashboard computes data-driven recommendations that update with every filter change:</p>
+      <div class="card" style="margin-bottom: 12px; border-color: rgba(56,189,248,0.4);">
+        <h3 style="color: var(--accent);">&#129302; What-If Discount Simulator</h3>
+        <p>The dashboard's flagship AI feature. Users adjust a discount cap slider and growth rate, and see <strong>in real-time</strong>:</p>
         <ul>
-          <li><strong>Revenue Forecasting</strong> — projects next-year revenue using calculated growth rates from filtered data</li>
-          <li><strong>Profit Recovery Analysis</strong> — quantifies exact savings from capping discounts at 20%</li>
-          <li><strong>Risk Detection</strong> — automatically surfaces the worst-performing sub-category and weakest region</li>
-          <li><strong>Anomaly Alerts</strong> — insight bar dynamically highlights profit-eroding patterns</li>
+          <li>Current vs. projected profit comparison</li>
+          <li>Exact dollar amount of profit recovered</li>
+          <li>Next-year revenue forecast at chosen growth rate</li>
+          <li>Margin comparison bar chart (before vs. after)</li>
+        </ul>
+        <p style="margin-top: 8px;">All calculations run against the <strong>currently filtered data</strong> — combine with Year/Region/Category filters for targeted scenario planning.</p>
+      </div>
+      <div class="card" style="margin-bottom: 12px;">
+        <h3>Dynamic Predictive Insights</h3>
+        <ul>
+          <li><strong>Revenue Forecasting</strong> — projects next-year revenue from calculated growth rates</li>
+          <li><strong>Risk Detection</strong> — auto-surfaces worst sub-category and weakest region</li>
+          <li><strong>Anomaly Alerts</strong> — insight bar highlights profit-eroding patterns dynamically</li>
         </ul>
       </div>
       <div class="card">
         <h3>Operational UX Alignment</h3>
-        <p>Designed for how operations teams actually work:</p>
-        <ul>
+        <ul style="line-height: 1.9;">
           <li><strong>Morning standup:</strong> KPI cards for quick health check</li>
-          <li><strong>Weekly review:</strong> filter by region, export PDF for leadership</li>
-          <li><strong>Monthly deep-dive:</strong> sortable table + discount analysis for policy decisions</li>
-          <li><strong>Quarterly planning:</strong> predictive section for forecasting</li>
+          <li><strong>Weekly review:</strong> filter by region, export PDF</li>
+          <li><strong>Monthly deep-dive:</strong> sortable table + discount analysis</li>
+          <li><strong>Quarterly planning:</strong> what-if simulator for forecasting</li>
         </ul>
       </div>
     </div>
